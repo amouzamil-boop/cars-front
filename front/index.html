@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 			rel="stylesheet"
-			integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 			crossorigin="anonymous"
 		/>
 		<title>Classic cars</title>
@@ -42,6 +42,17 @@
 				width: 32.5%;
 				min-width: 355px;
 			}
+			@media (max-width: 768px) {
+				.card {
+					width: 100%;
+					min-width: auto;
+				}
+			}
+			@media (min-width: 769px) and (max-width: 1024px) {
+				.card {
+					width: 48%;
+				}
+			}
 			.card img {
 				min-width: 410px;
 				transition: all 250ms ease-in-out;
@@ -56,13 +67,60 @@
 				justify-content: center;
 				height: 235px;
 			}
+			#toast-container {
+				z-index: 9999;
+			}
+			.toast {
+				min-width: 300px;
+			}
+			@media (max-width: 576px) {
+				.toast {
+					min-width: calc(100vw - 2rem);
+				}
+			}
+			/* Animations */
+			.card {
+				transition: transform 0.3s ease, box-shadow 0.3s ease;
+			}
+			.card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+			}
+			.fade-in {
+				animation: fadeIn 0.5s ease-in;
+			}
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: translateY(10px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			/* Lazy loading */
+			img[loading="lazy"] {
+				opacity: 0;
+				transition: opacity 0.3s;
+			}
+			img[loading="lazy"].loaded {
+				opacity: 1;
+			}
+			/* Accessibilité - Focus visible */
+			.btn:focus-visible,
+			.form-control:focus-visible,
+			.form-select:focus-visible {
+				outline: 2px solid #0d6efd;
+				outline-offset: 2px;
+			}
 		</style>
 	</head>
 	<body>
 		<header>
 			<nav class="navbar navbar-expand-md" aria-label="Classic cars site">
 				<div class="container">
-					<a class="navbar-brand" href="#">
+					<a class="navbar-brand" href="./index.html">
 						<img
 							src="./imgs/logo-180.png"
 							alt="classic cars"
@@ -88,8 +146,8 @@
 						<div class="navbar-collapse collapse" id="navbarsExample04">
 							<ul class="navbar-nav me-auto mb-2 mb-md-0">
 								<li class="nav-item">
-									<a class="nav-link active" aria-current="page" href="#"
-										>Home</a
+									<a class="nav-link active" aria-current="page" href="./index.html"
+										>Accueil</a
 									>
 								</li>
 							</ul>
@@ -101,25 +159,112 @@
 		<main>
 			<div class="container">
 				<h1 class="text-center mt-4">Classic cars</h1>
+				
+				<!-- Barre de recherche et tri -->
+				<div class="row mb-4 mt-3">
+					<div class="col-12 col-md-7">
+						<div class="input-group">
+							<span class="input-group-text">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+									<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+								</svg>
+							</span>
+							<input
+								type="text"
+								class="form-control"
+								id="search-input"
+								placeholder="Rechercher une voiture (marque, modèle, année, couleur...)"
+								aria-label="Rechercher une voiture"
+							/>
+							<button
+								class="btn btn-outline-secondary"
+								type="button"
+								id="clear-search-btn"
+								title="Effacer la recherche"
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+									<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+								</svg>
+							</button>
+						</div>
+					</div>
+					<div class="col-12 col-md-5 mt-2 mt-md-0">
+						<div class="input-group">
+							<span class="input-group-text">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
+									<path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
+								</svg>
+							</span>
+							<select class="form-select" id="sort-select" aria-label="Trier par">
+								<option value="">Trier par...</option>
+								<option value="brand-asc">Marque (A-Z)</option>
+								<option value="brand-desc">Marque (Z-A)</option>
+								<option value="year-asc">Année (croissant)</option>
+								<option value="year-desc">Année (décroissant)</option>
+								<option value="price-asc">Prix (croissant)</option>
+								<option value="price-desc">Prix (décroissant)</option>
+								<option value="mileage-asc">Kilométrage (croissant)</option>
+								<option value="mileage-desc">Kilométrage (décroissant)</option>
+							</select>
+							<button
+								class="btn btn-outline-secondary"
+								type="button"
+								id="clear-sort-btn"
+								title="Réinitialiser le tri"
+								style="display: none;"
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+									<path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"/>
+									<path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466"/>
+								</svg>
+							</button>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Spinner de chargement global -->
+				<div id="loading-spinner" class="text-center d-none mb-4">
+					<div class="spinner-border text-primary" role="status">
+						<span class="visually-hidden">Chargement...</span>
+					</div>
+					<p class="mt-2 text-muted">Chargement des voitures...</p>
+				</div>
+
+				<!-- Statistiques et actions -->
+				<div class="row mb-4" id="stats-section" style="display: none;">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header d-flex justify-content-between align-items-center">
+								<h5 class="mb-0">Statistiques</h5>
+								<div class="btn-group" role="group">
+									<button type="button" class="btn btn-sm btn-outline-primary" id="export-json-btn" title="Exporter en JSON">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filetype-json me-1" viewBox="0 0 16 16">
+											<path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM3.527 11.85h-.893l-.823 1.439h-.036L.943 11.85H.012l1.227 2.118L0 15.95h.861l.853-1.66h.036l.855 1.66h.907l-1.254-2.083zm2.42 0h-.893l-.823 1.439h-.036L3.363 11.85H2.433l1.227 2.118L2.433 15.95h.861l.853-1.66h.036l.855 1.66h.907l-1.254-2.083zm2.42 0h-.893l-.823 1.439h-.036L5.783 11.85H4.853l1.227 2.118L4.853 15.95h.861l.853-1.66h.036l.855 1.66h.907l-1.254-2.083zm1.14-.074V11.85h-.791v2.324h.79z"/>
+										</svg>
+										JSON
+									</button>
+									<button type="button" class="btn btn-sm btn-outline-success" id="export-csv-btn" title="Exporter en CSV">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filetype-csv me-1" viewBox="0 0 16 16">
+											<path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zm.354 7.146a.5.5 0 0 1-.708.708L12.5 11.207l-1.146 1.147a.5.5 0 0 1-.708-.708l1.5-1.5a.5.5 0 0 1 .708 0zm-2-2a.5.5 0 0 1-.708.708L10.5 9.207 9.354 10.354a.5.5 0 1 1-.708-.708l1.5-1.5a.5.5 0 0 1 .708 0z"/>
+										</svg>
+										CSV
+									</button>
+								</div>
+							</div>
+							<div class="card-body">
+								<div class="row text-center" id="stats-content">
+									<!-- Les statistiques seront insérées ici dynamiquement -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
 				<section
 					class="card-cont d-flex flex-wrap justify-content-center gap-3"
+					aria-label="Liste des voitures classiques"
 				>
-					<!-- doit être généré dynamiquement avec javascript  -->
-					<article class="card shadow-sm">
-						<a href="car.html?id=1">
-							<img
-								src="https://cdn.ferrari.com/cms/network/media/img/resize/5d055246107b060e8f527a59"
-								class="card-img-top object-fit-fill"
-								alt="..."
-							/>
-						</a>
-						<div class="card-body">
-							<h5 class="card-title">1962 Ferrari 250 GTO</h5>
-							<p class="card-text">Voiture de collection exceptionnelle</p>
-							<a href="car.html?id=1" class="btn btn-primary">See more</a>
-						</div>
-					</article>
-					<!-- jusqu'à ici  -->
+					<!-- Les cartes sont générées dynamiquement via JavaScript -->
 				</section>
 			</div>
 			<!-- Button trigger modal -->
@@ -129,7 +274,7 @@
 				data-bs-toggle="modal"
 				data-bs-target="#exampleModal"
 			>
-				Add car
+				Ajouter une voiture
 			</button>
 
 			<!-- Modal -->
@@ -144,26 +289,176 @@
 					<div class="modal-content">
 						<div class="modal-header">
 							<h1 class="modal-title fs-5" id="exampleModalLabel">
-								Modal title
+								Ajouter une nouvelle voiture
 							</h1>
 							<button
 								type="button"
 								class="btn-close"
 								data-bs-dismiss="modal"
-								aria-label="Close"
+								aria-label="Fermer"
 							></button>
 						</div>
-						<div class="modal-body">...</div>
+						<div class="modal-body">
+							<form id="car-form" action="javascript:void(0);" method="POST">
+								<div class="mb-3">
+									<label for="car-brand" class="form-label">Marque <span class="text-danger">*</span></label>
+									<input
+										type="text"
+										class="form-control"
+										id="car-brand"
+										name="brand"
+										required
+										placeholder="Ex: Ferrari"
+									/>
+									<div class="invalid-feedback">
+										Veuillez saisir une marque.
+									</div>
+								</div>
+
+								<div class="mb-3">
+									<label for="car-model" class="form-label">Modèle <span class="text-danger">*</span></label>
+									<input
+										type="text"
+										class="form-control"
+										id="car-model"
+										name="model"
+										required
+										placeholder="Ex: 250 GTO"
+									/>
+									<div class="invalid-feedback">
+										Veuillez saisir un modèle.
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<label for="car-year" class="form-label">Année <span class="text-danger">*</span></label>
+										<input
+											type="number"
+											class="form-control"
+											id="car-year"
+											name="year"
+											required
+											min="1900"
+											max="2025"
+											placeholder="Ex: 1962"
+										/>
+										<div class="invalid-feedback">
+											Veuillez saisir une année valide (1900-2025).
+										</div>
+									</div>
+
+									<div class="col-md-6 mb-3">
+										<label for="car-color" class="form-label">Couleur <span class="text-danger">*</span></label>
+										<input
+											type="text"
+											class="form-control"
+											id="car-color"
+											name="color"
+											required
+											placeholder="Ex: Rouge"
+										/>
+										<div class="invalid-feedback">
+											Veuillez saisir une couleur.
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-6 mb-3">
+										<label for="car-price" class="form-label">Prix (€) <span class="text-danger">*</span></label>
+										<input
+											type="number"
+											class="form-control"
+											id="car-price"
+											name="price"
+											required
+											min="0"
+											step="1"
+											placeholder="Ex: 45000000"
+										/>
+										<div class="invalid-feedback">
+											Veuillez saisir un prix valide.
+										</div>
+									</div>
+
+									<div class="col-md-6 mb-3">
+										<label for="car-mileage" class="form-label">Kilométrage (km) <span class="text-danger">*</span></label>
+										<input
+											type="number"
+											class="form-control"
+											id="car-mileage"
+											name="mileage"
+											required
+											min="0"
+											step="1"
+											placeholder="Ex: 12000"
+										/>
+										<div class="invalid-feedback">
+											Veuillez saisir un kilométrage valide.
+										</div>
+									</div>
+								</div>
+
+								<div class="mb-3">
+									<label for="car-description" class="form-label">Description</label>
+									<textarea
+										class="form-control"
+										id="car-description"
+										name="description"
+										rows="3"
+										placeholder="Ex: Voiture de collection exceptionnelle"
+									></textarea>
+								</div>
+
+								<div class="mb-3">
+									<label for="car-imageUrl" class="form-label">URL de l'image</label>
+									<input
+										type="url"
+										class="form-control"
+										id="car-imageUrl"
+										name="imageUrl"
+										placeholder="https://exemple.com/image.jpg"
+										aria-describedby="imageUrlHelp imagePreview"
+									/>
+									<div class="invalid-feedback">
+										Veuillez saisir une URL d'image valide.
+									</div>
+									<div class="form-text" id="imageUrlHelp">
+										Entrez l'URL complète de l'image de la voiture.
+									</div>
+									<!-- Prévisualisation de l'image -->
+									<div class="mt-3 text-center" id="imagePreview" style="display: none;">
+										<label class="form-label small text-muted">Aperçu de l'image :</label>
+										<div class="mt-2">
+											<img
+												id="imagePreviewImg"
+												src=""
+												alt="Aperçu de l'image"
+												class="img-thumbnail"
+												style="max-width: 300px; max-height: 200px; object-fit: cover;"
+											/>
+										</div>
+										<div id="imagePreviewError" class="alert alert-warning mt-2" style="display: none;" role="alert">
+											<small>Impossible de charger l'image. Vérifiez l'URL.</small>
+										</div>
+									</div>
+								</div>
+
+								<div id="form-alert" class="alert d-none" role="alert"></div>
+							</form>
+						</div>
 						<div class="modal-footer">
 							<button
 								type="button"
 								class="btn btn-secondary"
 								data-bs-dismiss="modal"
 							>
-								Close
+								Fermer
 							</button>
-							<button type="button" class="btn btn-primary">
-								Save changes
+							<button type="button" class="btn btn-primary" id="save-car-btn">
+								<span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="save-spinner"></span>
+								<span id="save-text">Enregistrer</span>
 							</button>
 						</div>
 					</div>
@@ -174,9 +469,12 @@
 			<div class="container"></div>
 		</footer>
 
+		<!-- Container pour les notifications toast -->
+		<div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container"></div>
+
 		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 			crossorigin="anonymous"
 		></script>
 		<script type="module" src="./js/script.js"></script>
